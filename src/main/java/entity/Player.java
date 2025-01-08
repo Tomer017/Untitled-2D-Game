@@ -61,18 +61,20 @@ public class Player extends Entity {
     }
 
     public void update() {
+        boolean moving = false;
+
         if (keyH.upPressed) {
             direction = "up";
+            moving = true;
         } else if (keyH.downPressed) {
             direction = "down";
+            moving = true;
         } else if (keyH.leftPressed) {
             direction = "left";
+            moving = true;
         } else if (keyH.rightPressed) {
             direction = "right";
-        }
-        else if (!keyH.upPressed){
-            direction = "null";
-
+            moving = true;
         }
 
         //CHECK TILE COLLISION
@@ -80,22 +82,26 @@ public class Player extends Entity {
         gp.cChecker.checkTile(this);
 
         // IF COLLISION IS FALSE, PLAYER CAN MOVE
-        if (!collisionOn){
-            switch(direction){
-                case "up":
-                    worldY -= speed;
-                    break;
-                case "down":
-                    worldY += speed;
-                    break;
-                case "left":
-                    worldX -= speed;
-                    break;
-                case "right":
-                    worldX += speed;
-                    break;
+        // ONLY UPDATE IMAGE WHEN NEW DIRECTION IS GIVEN
+        if (moving){
+            if (!collisionOn){
+                switch(direction){
+                    case "up":
+                        worldY -= speed;
+                        break;
+                    case "down":
+                        worldY += speed;
+                        break;
+                    case "left":
+                        worldX -= speed;
+                        break;
+                    case "right":
+                        worldX += speed;
+                        break;
+                }
             }
         }
+
 
         spriteCounter++;
         if (spriteCounter > 10) {
