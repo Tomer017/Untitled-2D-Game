@@ -1,13 +1,15 @@
 package entity;
 
-import main.GamePanel;
-import main.KeyHandler;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
+
+import javax.imageio.ImageIO;
+
+import main.GamePanel;
+import main.KeyHandler;
 
 public class Player extends Entity {
     GamePanel gp;
@@ -82,35 +84,31 @@ public class Player extends Entity {
         gp.cChecker.checkTile(this);
 
         // IF COLLISION IS FALSE, PLAYER CAN MOVE
-        // ONLY UPDATE IMAGE WHEN NEW DIRECTION IS GIVEN
-        if (moving){
-            if (!collisionOn){
-                switch(direction){
-                    case "up":
-                        worldY -= speed;
-                        break;
-                    case "down":
-                        worldY += speed;
-                        break;
-                    case "left":
-                        worldX -= speed;
-                        break;
-                    case "right":
-                        worldX += speed;
-                        break;
-                }
+        if (moving && !collisionOn) {
+            switch(direction) {
+                case "up":
+                    worldY -= speed;
+                    break;
+                case "down":
+                    worldY += speed;
+                    break;
+                case "left":
+                    worldX -= speed;
+                    break;
+                case "right":
+                    worldX += speed;
+                    break;
             }
-        }
-
-
-        spriteCounter++;
-        if (spriteCounter > 10) {
-            if (spriteNum == 1){
-                spriteNum = 2;
+            
+            // Only animate if moving
+            spriteCounter++;
+            if (spriteCounter > 8) {
+                spriteNum = (spriteNum % 3) + 1;  // Cycles through 1, 2, 3
+                spriteCounter = 0;
             }
-            else if (spriteNum == 2){
-                spriteNum = 1;
-            }
+        } else {
+            // Reset to standing position when not moving
+            spriteNum = 1;
             spriteCounter = 0;
         }
     }
@@ -120,58 +118,52 @@ public class Player extends Entity {
 
         switch (direction) {
             case "up":
-                image = up1;
                 if (keyH.upPressed) {
-                    if (spriteNum == 1){
-                        image = up2;
+                    switch(spriteNum) {
+                        case 1: image = up1; break;
+                        case 2: image = up2; break;
+                        case 3: image = up3; break;
                     }
-                    if (spriteNum == 2){
-                        image = up3;
-                    }
-
+                } else {
+                    image = up1;
                 }
                 break;
             case "down":
-                image = down1;
                 if (keyH.downPressed) {
-                    if (spriteNum == 1){
-                        image = down2;
+                    switch(spriteNum) {
+                        case 1: image = down1; break;
+                        case 2: image = down2; break;
+                        case 3: image = down3; break;
                     }
-                    if (spriteNum == 2){
-                        image = down3;
-                    }
+                } else {
+                    image = down1;
                 }
                 break;
             case "left":
-                image = left1;
                 if (keyH.leftPressed) {
-                    if (spriteNum == 1){
-                        image = left2;
+                    switch(spriteNum) {
+                        case 1: image = left1; break;
+                        case 2: image = left2; break;
+                        case 3: image = left3; break;
                     }
-                    if (spriteNum == 2){
-                        image = left3;
-                    }
+                } else {
+                    image = left1;
                 }
                 break;
             case "right":
-                image = right1;
                 if (keyH.rightPressed) {
-                    if (spriteNum == 1){
-                        image = right2;
+                    switch(spriteNum) {
+                        case 1: image = right1; break;
+                        case 2: image = right2; break;
+                        case 3: image = right3; break;
                     }
-                    if (spriteNum == 2){
-                        image = right3;
-                    }
+                } else {
+                    image = right1;
                 }
-                break;
-            default:
-                image = down1;
                 break;
         }
 
-        g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null );
-
-
+        g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
     }
 
 
