@@ -1,15 +1,16 @@
 package Tile;
 
-import main.GamePanel;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Objects;
 
-public class TileManager {
+import javax.imageio.ImageIO;
+
+import main.GamePanel;
+
+public final class TileManager {
     GamePanel gp;
     public Tile[] tile;
     public int[][] mapTileNum;
@@ -69,29 +70,28 @@ public class TileManager {
     public void loadMap(String mapFile) {
         try {
             InputStream is = Objects.requireNonNull(getClass().getResourceAsStream(mapFile));
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-
-            int col = 0;
-            int row = 0;
-
-            while (row < gp.maxWorldRow && col < gp.maxWorldCol) {
-
-                String line = br.readLine();
-
-                while (col < gp.maxWorldCol){
-                    String[] numbers = line.split(" ");
-
-                    int num = Integer.parseInt(numbers[col]);
-
-                    mapTileNum[col][row] = num;
-                    col++;
-                }
-                if (col == gp.maxWorldCol) {
-                    col = 0;
-                    row++;
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+                int col = 0;
+                int row = 0;
+                
+                while (row < gp.maxWorldRow && col < gp.maxWorldCol) {
+                    
+                    String line = br.readLine();
+                    
+                    while (col < gp.maxWorldCol){
+                        String[] numbers = line.split(" ");
+                        
+                        int num = Integer.parseInt(numbers[col]);
+                        
+                        mapTileNum[col][row] = num;
+                        col++;
+                    }
+                    if (col == gp.maxWorldCol) {
+                        col = 0;
+                        row++;
+                    }
                 }
             }
-            br.close();
 
         } catch (Exception e) {
             throw new RuntimeException(e);
