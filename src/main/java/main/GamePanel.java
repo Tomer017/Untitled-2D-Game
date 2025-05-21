@@ -1,10 +1,14 @@
 package main;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+import javax.swing.JPanel;
+
 import Tile.TileManager;
 import entity.Player;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable {
     // SCREEN SETTINGS
@@ -32,13 +36,8 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
     public CollisionChecker cChecker = new CollisionChecker(this);
     public Player player = new Player(this, keyH);
-
-    // Set player's default position
-    double playerX = 100.0;
-    double playerY = 100.0;
-
-    int playerSpeed = 4;
-
+    
+    
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.BLACK);
@@ -91,6 +90,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     }
 
+    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
