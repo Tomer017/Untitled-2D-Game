@@ -11,7 +11,7 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import main.KeyHandler;
 
-public class Player extends Entity {
+public final class Player extends Entity {
     GamePanel gp;
     KeyHandler keyH;
 
