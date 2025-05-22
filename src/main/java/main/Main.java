@@ -7,13 +7,6 @@ import javax.swing.JFrame;
  * Sets up the game window and initializes the game panel.
  */
 public class Main {
-    /**
-     * The main method that starts the game.
-     * Creates and configures the game window, adds the game panel,
-     * and starts the game thread.
-     *
-     * @param args Command line arguments (not used)
-     */
     public static void main(String[] args) {
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
