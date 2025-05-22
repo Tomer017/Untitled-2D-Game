@@ -90,43 +90,33 @@ public final class Player extends Entity {
      */
     public void update() {
         boolean moving = false;
+        int horizontalMovement = keyH.getHorizontalMovement();
+        int verticalMovement = keyH.getVerticalMovement();
 
-        if (keyH.upPressed) {
-            direction = "up";
+        // Set direction based on movement priority
+        // Horizontal movement takes precedence over vertical
+        if (horizontalMovement != 0) {
             moving = true;
-        } else if (keyH.downPressed) {
-            direction = "down";
+            direction = horizontalMovement > 0 ? "right" : "left";
+        } else if (verticalMovement != 0) {
             moving = true;
-        } else if (keyH.leftPressed) {
-            direction = "left";
-            moving = true;
-        } else if (keyH.rightPressed) {
-            direction = "right";
-            moving = true;
+            direction = verticalMovement > 0 ? "down" : "up";
         }
 
-        //CHECK TILE COLLISION
+        // CHECK TILE COLLISION
         collisionOn = false;
         gp.cChecker.checkTile(this);
 
         // IF COLLISION IS FALSE, PLAYER CAN MOVE
         if (moving && !collisionOn) {
-            switch(direction) {
-                case "up":
-                    worldY -= speed;
-                    break;
-                case "down":
-                    worldY += speed;
-                    break;
-                case "left":
-                    worldX -= speed;
-                    break;
-                case "right":
-                    worldX += speed;
-                    break;
+            // Apply movement (no diagonal movement)
+            if (horizontalMovement != 0) {
+                worldX += horizontalMovement * speed;
+            } else if (verticalMovement != 0) {
+                worldY += verticalMovement * speed;
             }
             
-            // Only animate if moving
+            // Animate only when moving
             spriteCounter++;
             if (spriteCounter > 8) {
                 spriteNum = (spriteNum % 3) + 1;  // Cycles through 1, 2, 3
