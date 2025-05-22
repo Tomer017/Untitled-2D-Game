@@ -11,13 +11,28 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import main.KeyHandler;
 
+/**
+ * Represents the player character in the game.
+ * Handles player movement, animation, and rendering based on user input.
+ * Extends the base Entity class with player-specific functionality.
+ */
 public final class Player extends Entity {
+    /** Reference to the main game panel */
     private final GamePanel gp;
+    /** Reference to the keyboard input handler */
     private final KeyHandler keyH;
 
+    /** Fixed screen position X coordinate */
     public final int screenX;
+    /** Fixed screen position Y coordinate */
     public final int screenY;
 
+    /**
+     * Constructs a new Player with the specified game panel and key handler.
+     *
+     * @param gp The game panel this player belongs to
+     * @param keyH The key handler for processing player input
+     */
     public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
         this.keyH = keyH;
@@ -35,6 +50,9 @@ public final class Player extends Entity {
         loadPlayerImages();
     }
 
+    /**
+     * Sets the default values for player position, speed, and direction.
+     */
     private void setDefaultValues() {
         worldX = gp.tileSize * 23;
         worldY = gp.tileSize * 21;
@@ -42,6 +60,11 @@ public final class Player extends Entity {
         direction = "down";
     }
 
+    /**
+     * Loads all player sprite images for different directions and animation frames.
+     * 
+     * @throws RuntimeException if there's an error loading any sprite image
+     */
     private void loadPlayerImages() {
         try {
             up1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/IMG_2395.png")));
@@ -61,6 +84,10 @@ public final class Player extends Entity {
         }
     }
 
+    /**
+     * Updates the player's state including position and animation.
+     * Handles movement based on keyboard input and collision detection.
+     */
     public void update() {
         boolean moving = false;
 
@@ -85,10 +112,18 @@ public final class Player extends Entity {
         // IF COLLISION IS FALSE, PLAYER CAN MOVE
         if (moving && !collisionOn) {
             switch(direction) {
-                case "up" -> worldY -= speed;
-                case "down" -> worldY += speed;
-                case "left" -> worldX -= speed;
-                case "right" -> worldX += speed;
+                case "up":
+                    worldY -= speed;
+                    break;
+                case "down":
+                    worldY += speed;
+                    break;
+                case "left":
+                    worldX -= speed;
+                    break;
+                case "right":
+                    worldX += speed;
+                    break;
             }
             
             // Only animate if moving
@@ -104,12 +139,22 @@ public final class Player extends Entity {
         }
     }
 
+    /**
+     * Renders the player on the screen.
+     *
+     * @param g2 The Graphics2D object used for rendering
+     */
     public void draw(Graphics2D g2) {
         BufferedImage image = getDirectionalImage();
         Objects.requireNonNull(image, "Player sprite image cannot be null");
         g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
     }
 
+    /**
+     * Gets the appropriate sprite image based on the player's direction and movement state.
+     *
+     * @return The BufferedImage to use for the current frame
+     */
     private BufferedImage getDirectionalImage() {
         return switch (direction) {
             case "up" -> keyH.upPressed ? getSpriteFrame(up1, up2, up3) : up1;
@@ -120,6 +165,14 @@ public final class Player extends Entity {
         };
     }
 
+    /**
+     * Selects the appropriate sprite frame from the animation sequence.
+     *
+     * @param frame1 First frame of the animation
+     * @param frame2 Second frame of the animation
+     * @param frame3 Third frame of the animation
+     * @return The selected frame based on current animation state
+     */
     private BufferedImage getSpriteFrame(BufferedImage frame1, BufferedImage frame2, BufferedImage frame3) {
         return switch (spriteNum) {
             case 1 -> frame1;

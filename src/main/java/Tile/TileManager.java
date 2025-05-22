@@ -10,11 +10,25 @@ import javax.imageio.ImageIO;
 
 import main.GamePanel;
 
+/**
+ * Manages the game's tile system, including loading, storing, and rendering map tiles.
+ * This class handles the game world's visual representation through a tile-based system,
+ * supporting different tile types (grass, water, buildings, etc.) and their properties.
+ */
 public final class TileManager {
-    GamePanel gp;
+    /** Reference to the main game panel */
+    private final GamePanel gp;
+    /** Array storing all tile types used in the game */
     public Tile[] tile;
+    /** 2D array representing the map layout using tile numbers */
     public int[][] mapTileNum;
 
+    /**
+     * Constructs a new TileManager with the specified game panel.
+     * Initializes tile arrays and loads necessary resources.
+     *
+     * @param gp The game panel that this tile manager will work with
+     */
     public TileManager(GamePanel gp) {
         this.gp = gp;
 
@@ -23,9 +37,15 @@ public final class TileManager {
 
         getTileImage();
         loadMap("/maps/world01.txt");
-
     }
 
+    /**
+     * Loads all tile images and initializes their properties.
+     * Sets up different types of tiles including grass, buildings, water, and trees,
+     * along with their collision properties.
+     * 
+     * @throws RuntimeException if there's an error loading any tile image
+     */
     public void getTileImage() {
         try{
             // GRASS
@@ -63,10 +83,17 @@ public final class TileManager {
             tile[9].collision = true;
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to load tile images", e);
         }
-
     }
+
+    /**
+     * Loads a map from a text file and converts it into a tile-based world.
+     * The map file should contain space-separated numbers representing tile types.
+     *
+     * @param mapFile The path to the map file in the resources directory
+     * @throws RuntimeException if there's an error reading or parsing the map file
+     */
     public void loadMap(String mapFile) {
         try {
             InputStream is = Objects.requireNonNull(getClass().getResourceAsStream(mapFile));
@@ -75,14 +102,11 @@ public final class TileManager {
                 int row = 0;
                 
                 while (row < gp.maxWorldRow && col < gp.maxWorldCol) {
-                    
                     String line = br.readLine();
                     
                     while (col < gp.maxWorldCol){
                         String[] numbers = line.split(" ");
-                        
                         int num = Integer.parseInt(numbers[col]);
-                        
                         mapTileNum[col][row] = num;
                         col++;
                     }
@@ -92,13 +116,18 @@ public final class TileManager {
                     }
                 }
             }
-
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to load map file: " + mapFile, e);
         }
     }
-    public void draw(Graphics2D g2){
 
+    /**
+     * Renders the visible tiles on the screen based on the player's position.
+     * Only draws tiles that are within the player's view range to optimize performance.
+     *
+     * @param g2 The Graphics2D object used for rendering
+     */
+    public void draw(Graphics2D g2) {
         int worldCol = 0;
         int worldRow = 0;
 
@@ -111,6 +140,7 @@ public final class TileManager {
             int screenX = worldX - gp.player.worldX + gp.player.screenX;
             int screenY = worldY - gp.player.worldY + gp.player.screenY;
 
+            // Only draw tiles visible on screen
             if (worldX + gp.tileSize > gp.player.worldX - gp.player.screenX &&
                 worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
                 worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
@@ -120,16 +150,10 @@ public final class TileManager {
 
             worldCol++;
 
-
             if (worldCol == gp.maxWorldCol) {
                 worldCol = 0;
                 worldRow++;
             }
         }
-
-
-
-
-
     }
 }
